@@ -4,7 +4,7 @@
 	<ItemGroup>
 		<None Include="..\..\MarchingIslands.uproject" />
 		<Filter Include="Source">
-			<UniqueIdentifier>{57A82FB3-F777-4F07-8B9C-79CCAB44FBEB}</UniqueIdentifier>
+			<UniqueIdentifier>{3E34061D-3385-49F0-98D2-E20E38FE1AEF}</UniqueIdentifier>
 		</Filter>
 		<None Include="..\..\Source\MarchingIslands.Target.cs">
 			<Filter>Source</Filter>
@@ -13,7 +13,7 @@
 			<Filter>Source</Filter>
 		</None >
 		<Filter Include="Config">
-			<UniqueIdentifier>{85C30EA3-2CDE-4B97-B4CA-FA05715B8AD8}</UniqueIdentifier>
+			<UniqueIdentifier>{0436ACBA-8116-487A-9E37-06459D976C18}</UniqueIdentifier>
 		</Filter>
 		<None Include="..\..\Config\DefaultEditor.ini">
 			<Filter>Config</Filter>
@@ -25,7 +25,7 @@
 			<Filter>Config</Filter>
 		</None >
 		<Filter Include="Source\MarchingIslands">
-			<UniqueIdentifier>{AC5F5BE4-A5B9-48F7-94F9-92B0058F2616}</UniqueIdentifier>
+			<UniqueIdentifier>{DB1A9698-8511-4DD0-9815-0A967FCA0977}</UniqueIdentifier>
 		</Filter>
 		<None Include="..\..\Source\MarchingIslands\MarchingIslands.Build.cs">
 			<Filter>Source\MarchingIslands</Filter>
@@ -42,10 +42,10 @@
 		<ClInclude Include="..\..\Source\MarchingIslands\MarchingIslandsGameModeBase.h">
 			<Filter>Source\MarchingIslands</Filter>
 		</ClInclude >
-		<ClCompile Include="..\..\Source\MarchingIslands\MarchingRuntimeMeshComponent.cpp">
+		<ClCompile Include="..\..\Source\MarchingIslands\MarchingTerrain.cpp">
 			<Filter>Source\MarchingIslands</Filter>
 		</ClCompile >
-		<ClInclude Include="..\..\Source\MarchingIslands\MarchingRuntimeMeshComponent.h">
+		<ClInclude Include="..\..\Source\MarchingIslands\MarchingTerrain.h">
 			<Filter>Source\MarchingIslands</Filter>
 		</ClInclude >
 	</ItemGroup>

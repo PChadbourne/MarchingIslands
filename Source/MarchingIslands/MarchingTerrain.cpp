@@ -1,12 +1,51 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Copyright 2017 Patrick Chadbourne (PChadbourne). All Rights Reserved.
 
 #include "MarchingIslands.h"
-#include "MarchingRuntimeMeshComponent.h"
-#include <cmath>
+#include "MarchingTerrain.h"
+#include "RuntimeMeshComponent.h"
+
+
+
+TArray<FVector> Vertices;
+TArray<FVector> Normals;
+TArray<FRuntimeMeshTangent> Tangents;
+TArray<FColor> VertexColors;
+TArray<FVector2D> TextureCoordinates;
+TArray<int32> Triangles;
+
+// Sets default values
+AMarchingTerrain::AMarchingTerrain()
+{
+ 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+	PrimaryActorTick.bCanEverTick = true;
+	RMC = CreateDefaultSubobject<URuntimeMeshComponent>(TEXT("GeneratedMesh"));
+	RootComponent = RMC;
+	Grid.Empty();
+	Grid.Init(1.0f, Width*Width*Width*.5);
+	Grid.SetNumZeroed(Width*Width*Width);
+
+
+}
+
+// Called when the game starts or when spawned
+void AMarchingTerrain::BeginPlay()
+{
+	Super::BeginPlay();
+	
+}
+
+// Called every frame
+void AMarchingTerrain::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+
+}
+
 
 //Marching cubes implementation adapted from Paul Bourke's article (http://paulbourke.net/geometry/polygonise/)
 int edgeTable[256] = 
-{	0x0  , 0x109, 0x203, 0x30a, 0x406, 0x50f, 0x605, 0x70c,
+{
+	0x0  , 0x109, 0x203, 0x30a, 0x406, 0x50f, 0x605, 0x70c,
 	0x80c, 0x905, 0xa0f, 0xb06, 0xc0a, 0xd03, 0xe09, 0xf00,
 	0x190, 0x99 , 0x393, 0x29a, 0x596, 0x49f, 0x795, 0x69c,
 	0x99c, 0x895, 0xb9f, 0xa96, 0xd9a, 0xc93, 0xf99, 0xe90,
@@ -38,7 +77,6 @@ int edgeTable[256] =
 	0x69c, 0x795, 0x49f, 0x596, 0x29a, 0x393, 0x99 , 0x190,
 	0xf00, 0xe09, 0xd03, 0xc0a, 0xb06, 0xa0f, 0x905, 0x80c,
 	0x70c, 0x605, 0x50f, 0x406, 0x30a, 0x203, 0x109, 0x0 };
-
 int triTable[256][16] =
 { { -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 },
 { 0, 8, 3, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 },
@@ -297,85 +335,140 @@ int triTable[256][16] =
 { 0, 3, 8, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 },
 { -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 } };
 
-
-void UMarchingRuntimeMeshComponent::MarchingCubes(FGridcell Grid, float Isolevel)
+void AMarchingTerrain::MarchingCubes(FGridcell Gridcell, float Isolevel)
 {
+	
 	int CubeIndex = 0;
 	FVector VertList[12];
-	if (Grid.val[0] < Isolevel) CubeIndex |= 1;
-	if (Grid.val[1] < Isolevel) CubeIndex |= 2;
-	if (Grid.val[2] < Isolevel) CubeIndex |= 4;
-	if (Grid.val[3] < Isolevel) CubeIndex |= 8;
-	if (Grid.val[4] < Isolevel) CubeIndex |= 16;
-	if (Grid.val[5] < Isolevel) CubeIndex |= 32;
-	if (Grid.val[6] < Isolevel) CubeIndex |= 64;
-	if (Grid.val[7] < Isolevel) CubeIndex |= 128;
+
+	if (Gridcell.val[0] < Isolevel) CubeIndex |= 1;
+	if (Gridcell.val[1] < Isolevel) CubeIndex |= 2;
+	if (Gridcell.val[2] < Isolevel) CubeIndex |= 4;
+	if (Gridcell.val[3] < Isolevel) CubeIndex |= 8;
+	if (Gridcell.val[4] < Isolevel) CubeIndex |= 16;
+	if (Gridcell.val[5] < Isolevel) CubeIndex |= 32;
+	if (Gridcell.val[6] < Isolevel) CubeIndex |= 64;
+	if (Gridcell.val[7] < Isolevel) CubeIndex |= 128;
 
 	if (edgeTable[CubeIndex] == 0) return;
 
-	if (edgeTable[CubeIndex] & 1) {
-		Vertices.Add(VertexInterp(Isolevel, Grid.p[0], Grid.p[1], Grid.val[0], Grid.val[1]));
-		Triangles.Add(Triangles.Num());
-	}
-	if (edgeTable[CubeIndex] & 2) {
-		Vertices.Add(VertexInterp(Isolevel, Grid.p[1], Grid.p[2], Grid.val[1], Grid.val[2]));
-		Triangles.Add(Triangles.Num());
-	}
-	if (edgeTable[CubeIndex] & 4) {
-		VertList[2] = VertexInterp(Isolevel, Grid.p[2], Grid.p[3], Grid.val[2], Grid.val[3]);
-		Triangles.Add(Triangles.Num());
-	}
-	if (edgeTable[CubeIndex] & 8) {
-		VertList[3] = VertexInterp(Isolevel, Grid.p[3], Grid.p[0], Grid.val[3], Grid.val[0]);
-		Triangles.Add(Triangles.Num());
-	}
-	if (edgeTable[CubeIndex] & 16) {
-		VertList[4] = VertexInterp(Isolevel, Grid.p[4], Grid.p[5], Grid.val[4], Grid.val[5]);
-		Triangles.Add(Triangles.Num());
-	}
-	if (edgeTable[CubeIndex] & 32) {
-		VertList[5] = VertexInterp(Isolevel, Grid.p[5], Grid.p[6], Grid.val[5], Grid.val[6]);
-		Triangles.Add(Triangles.Num());
-	}
-	if (edgeTable[CubeIndex] & 64) {
-		VertList[6] = VertexInterp(Isolevel, Grid.p[6], Grid.p[7], Grid.val[6], Grid.val[7]);
-		Triangles.Add(Triangles.Num());
-	}
-	if (edgeTable[CubeIndex] & 128) {
-		VertList[7] = VertexInterp(Isolevel, Grid.p[7], Grid.p[4], Grid.val[7], Grid.val[4]);
-		Triangles.Add(Triangles.Num());
-	}
-	if (edgeTable[CubeIndex] & 256) {
-		VertList[8] = VertexInterp(Isolevel, Grid.p[0], Grid.p[4], Grid.val[0], Grid.val[4]);
-		Triangles.Add(Triangles.Num());
-	}
-	if (edgeTable[CubeIndex] & 512) {
-		VertList[9] = VertexInterp(Isolevel, Grid.p[1], Grid.p[5], Grid.val[1], Grid.val[5]);
-		Triangles.Add(Triangles.Num());
-	}
-	if (edgeTable[CubeIndex] & 1024) {
-		VertList[10] = VertexInterp(Isolevel, Grid.p[2], Grid.p[6], Grid.val[2], Grid.val[6]);
-		Triangles.Add(Triangles.Num());
-	}
-	if (edgeTable[CubeIndex] & 2048) {
-		VertList[11] = VertexInterp(Isolevel, Grid.p[3], Grid.p[7], Grid.val[3], Grid.val[7]);
-		Triangles.Add(Triangles.Num());
-	}
+	if (edgeTable[CubeIndex] & 1)
+		VertList[0] = VertexInterp(Gridcell.p[0], Gridcell.p[1]);
+	if (edgeTable[CubeIndex] & 2)
+		VertList[1] = VertexInterp(Gridcell.p[1], Gridcell.p[2]);
+	if (edgeTable[CubeIndex] & 4)
+		VertList[2] = VertexInterp(Gridcell.p[2], Gridcell.p[3]);
+	if (edgeTable[CubeIndex] & 8)
+		VertList[3] = VertexInterp(Gridcell.p[3], Gridcell.p[0]);
+	if (edgeTable[CubeIndex] & 16)
+		VertList[4] = VertexInterp(Gridcell.p[4], Gridcell.p[5]);
+	if (edgeTable[CubeIndex] & 32)
+		VertList[5] = VertexInterp(Gridcell.p[5], Gridcell.p[6]);
+	if (edgeTable[CubeIndex] & 64)
+		VertList[6] = VertexInterp(Gridcell.p[6], Gridcell.p[7]);
+	if (edgeTable[CubeIndex] & 128)
+		VertList[7] = VertexInterp(Gridcell.p[7], Gridcell.p[4]);
+	if (edgeTable[CubeIndex] & 256)
+		VertList[8] = VertexInterp(Gridcell.p[0], Gridcell.p[4]);
+	if (edgeTable[CubeIndex] & 512)
+		VertList[9] = VertexInterp(Gridcell.p[1], Gridcell.p[5]);
+	if (edgeTable[CubeIndex] & 1024)
+		VertList[10] = VertexInterp(Gridcell.p[2], Gridcell.p[6]);
+	if (edgeTable[CubeIndex] & 2048)
+		VertList[11] = VertexInterp(Gridcell.p[3], Gridcell.p[7]);
 
+	
+	for (int i = 0; triTable[CubeIndex][i] != -1; i += 3) {
+		Vertices.Add(VertList[triTable[CubeIndex][i]]);
+		Triangles.Add(Triangles.Num());
+
+		Vertices.Add(VertList[triTable[CubeIndex][i + 1]]);
+		Triangles.Add(Triangles.Num());
+
+		Vertices.Add(VertList[triTable[CubeIndex][i + 2]]);
+		Triangles.Add(Triangles.Num());
+
+	}
 }
 
-FVector VertexInterp(float Isolevel, FVector P1, FVector P2, float ValP1, float ValP2)
+void AMarchingTerrain::UpdateMesh(float Isolevel)
 {
-	float Mu;
-	FVector P;
-	
-	if (abs(Isolevel - ValP1) < 0.00001) return P1;
-	if (abs(Isolevel - ValP2) < 0.00001) return P2;
-	if (abs(ValP1 - ValP2) < 0.00001) return P1;
-	Mu = (Isolevel - ValP1) / (ValP2 - ValP1);
-	P.X = P1.X + Mu * (P2.X - P1.X);
-	P.Y = P1.Y + Mu * (P2.Y - P1.Y);
-	P.Z = P1.Z + Mu * (P2.Z - P1.Z);
+	Vertices.Reset();
+	Triangles.Reset();
+	Normals.Reset();
+	Tangents.Reset();
+	VertexColors.Reset();
+	TextureCoordinates.Reset();
 
-	return P;
+	int Width2 = Width * Width;
+	FGridcell Gridcell;
+	
+
+	for (int i = 0; i < (Width - 1); i++)
+	{
+		for (int j = 0; j < (Width - 1); j++)
+		{
+			for (int k = 0; k < (Width - 1); k++)
+			{
+				Gridcell.val[7] = Grid[i + (Width * j) + (Width2 * k)];
+				Gridcell.p[7] = FVector(i, j, k);
+				Gridcell.val[4] = Grid[i + (Width * j) + (Width2 * k) + 1];
+				Gridcell.p[4] = FVector(i + 1, j, k);
+				Gridcell.val[6] = Grid[i + (Width * j) + (Width2 * k) + Width];
+				Gridcell.p[6] = FVector(i, j + 1, k);
+				Gridcell.val[5] = Grid[i + (Width * j) + (Width2 * k) + Width + 1];
+				Gridcell.p[5] = FVector(i + 1, j + 1, k);
+				Gridcell.val[3] = Grid[i + (Width * j) + (Width2 * k) + Width2];
+				Gridcell.p[3] = FVector(i, j, k + 1);
+				Gridcell.val[0] = Grid[i + (Width * j) + (Width2 * k) + Width2 + 1];
+				Gridcell.p[0] = FVector(i+1, j, k+1);
+				Gridcell.val[2] = Grid[i + (Width * j) + (Width2 * k) + Width2 + Width];
+				Gridcell.p[2] = FVector(i, j+1, k+1);
+				Gridcell.val[1] = Grid[i + (Width * j) + (Width2 * k) + Width2 + Width + 1];
+				Gridcell.p[1] = FVector(i+1, j+1, k+1);
+
+				MarchingCubes(Gridcell, Isolevel);
+			}
+		}
+	}
+
+	Normals.SetNum(Vertices.Num(), false);
+	TextureCoordinates.SetNum(Vertices.Num(), false);
+	VertexColors.SetNum(Vertices.Num(), false);
+	Tangents.SetNum(Vertices.Num(), false);
+	
+	for (int32 Index = 0; Index < Triangles.Num(); Index += 3)
+	{
+		const FVector Edge21 = Vertices[Triangles[Index + 1]] - Vertices[Triangles[Index + 2]];
+		const FVector Edge20 = Vertices[Triangles[Index + 0]] - Vertices[Triangles[Index + 2]];
+		FVector TriNormal = (Edge21 ^ Edge20).GetSafeNormal();
+
+		FVector FaceTangentX = Edge20.GetSafeNormal();
+		FVector FaceTangentY = (FaceTangentX ^ TriNormal).GetSafeNormal();
+		FVector FaceTangentZ = TriNormal;
+
+		// Use Gram-Schmidt orthogonalization to make sure X is orth with Z
+		FaceTangentX -= FaceTangentZ * (FaceTangentZ | FaceTangentX);
+		FaceTangentX.Normalize();
+
+		// See if we need to flip TangentY when generating from cross product
+		const bool bFlipBitangent = ((FaceTangentZ ^ FaceTangentX) | FaceTangentY) < 0.f;
+		TriNormal.Normalize();
+		FaceTangentX.Normalize();
+		FRuntimeMeshTangent tangent = FRuntimeMeshTangent(FaceTangentX, bFlipBitangent);
+		for (int32 i = 0; i < 3; i++)
+		{
+			Normals[Triangles[Index + i]] = TriNormal;
+			Tangents[Triangles[Index + i]] = tangent;
+			VertexColors[Triangles[Index + i]] = FColor(1, 1, 1, 1);
+		}
+	}
+	
+
+	RMC->CreateMeshSection(0, Vertices, Triangles, Normals, TextureCoordinates, VertexColors, Tangents, true);
+}
+
+FVector AMarchingTerrain::VertexInterp(FVector P1, FVector P2)
+{
+	return P1 + (P2 - P1) / 2.0f;
 }
