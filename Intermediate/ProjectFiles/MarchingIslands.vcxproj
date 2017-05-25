@@ -84,7 +84,7 @@
 		</ProjectConfiguration>
 	</ItemGroup>
 	<PropertyGroup Label="Globals">
-		<ProjectGuid>{56657C7C-7635-4080-A0EB-5719C4188780}</ProjectGuid>
+		<ProjectGuid>{92D6432D-78EF-4422-A6C2-78600D6E1573}</ProjectGuid>
 		<Keyword>MakeFileProj</Keyword>
 		<RootNamespace>MarchingIslands</RootNamespace>
        <PlatformToolset>v140</PlatformToolset>

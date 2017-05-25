@@ -4,7 +4,7 @@
 	<ItemGroup>
 		<None Include="..\..\MarchingIslands.uproject" />
 		<Filter Include="Source">
-			<UniqueIdentifier>{3E34061D-3385-49F0-98D2-E20E38FE1AEF}</UniqueIdentifier>
+			<UniqueIdentifier>{619F786F-44EE-4D80-8366-7699A567D74C}</UniqueIdentifier>
 		</Filter>
 		<None Include="..\..\Source\MarchingIslands.Target.cs">
 			<Filter>Source</Filter>
@@ -13,7 +13,7 @@
 			<Filter>Source</Filter>
 		</None >
 		<Filter Include="Config">
-			<UniqueIdentifier>{0436ACBA-8116-487A-9E37-06459D976C18}</UniqueIdentifier>
+			<UniqueIdentifier>{7E0C69D3-E4EA-4E64-8555-B26970C81FBE}</UniqueIdentifier>
 		</Filter>
 		<None Include="..\..\Config\DefaultEditor.ini">
 			<Filter>Config</Filter>
@@ -25,7 +25,7 @@
 			<Filter>Config</Filter>
 		</None >
 		<Filter Include="Source\MarchingIslands">
-			<UniqueIdentifier>{DB1A9698-8511-4DD0-9815-0A967FCA0977}</UniqueIdentifier>
+			<UniqueIdentifier>{743C1ACE-5769-4908-9825-AD660F429BFF}</UniqueIdentifier>
 		</Filter>
 		<None Include="..\..\Source\MarchingIslands\MarchingIslands.Build.cs">
 			<Filter>Source\MarchingIslands</Filter>
