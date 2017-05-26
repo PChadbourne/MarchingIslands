@@ -53,10 +53,12 @@ public:
 	int VertexCount;
 	int IndexCount;
 
-	void Contour(float threshold);
+	TArray<float> Grid;
 
+	void Contour(float Threshold);
 
 	TArray<Cell> Cells;
+
 	TArray<FVector> CalculatedVertices;
 	
 	const bool Quads = true;
