@@ -1,52 +1,67 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-
 <Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-	<ItemGroup>
-		<None Include="..\..\MarchingIslands.uproject" />
-		<Filter Include="Source">
-			<UniqueIdentifier>{619F786F-44EE-4D80-8366-7699A567D74C}</UniqueIdentifier>
-		</Filter>
-		<None Include="..\..\Source\MarchingIslands.Target.cs">
-			<Filter>Source</Filter>
-		</None >
-		<None Include="..\..\Source\MarchingIslandsEditor.Target.cs">
-			<Filter>Source</Filter>
-		</None >
-		<Filter Include="Config">
-			<UniqueIdentifier>{7E0C69D3-E4EA-4E64-8555-B26970C81FBE}</UniqueIdentifier>
-		</Filter>
-		<None Include="..\..\Config\DefaultEditor.ini">
-			<Filter>Config</Filter>
-		</None >
-		<None Include="..\..\Config\DefaultEngine.ini">
-			<Filter>Config</Filter>
-		</None >
-		<None Include="..\..\Config\DefaultGame.ini">
-			<Filter>Config</Filter>
-		</None >
-		<Filter Include="Source\MarchingIslands">
-			<UniqueIdentifier>{743C1ACE-5769-4908-9825-AD660F429BFF}</UniqueIdentifier>
-		</Filter>
-		<None Include="..\..\Source\MarchingIslands\MarchingIslands.Build.cs">
-			<Filter>Source\MarchingIslands</Filter>
-		</None >
-		<ClCompile Include="..\..\Source\MarchingIslands\MarchingIslands.cpp">
-			<Filter>Source\MarchingIslands</Filter>
-		</ClCompile >
-		<ClInclude Include="..\..\Source\MarchingIslands\MarchingIslands.h">
-			<Filter>Source\MarchingIslands</Filter>
-		</ClInclude >
-		<ClCompile Include="..\..\Source\MarchingIslands\MarchingIslandsGameModeBase.cpp">
-			<Filter>Source\MarchingIslands</Filter>
-		</ClCompile >
-		<ClInclude Include="..\..\Source\MarchingIslands\MarchingIslandsGameModeBase.h">
-			<Filter>Source\MarchingIslands</Filter>
-		</ClInclude >
-		<ClCompile Include="..\..\Source\MarchingIslands\MarchingTerrain.cpp">
-			<Filter>Source\MarchingIslands</Filter>
-		</ClCompile >
-		<ClInclude Include="..\..\Source\MarchingIslands\MarchingTerrain.h">
-			<Filter>Source\MarchingIslands</Filter>
-		</ClInclude >
-	</ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\MarchingIslands.uproject" />
+    <Filter Include="Source">
+      <UniqueIdentifier>{619F786F-44EE-4D80-8366-7699A567D74C}</UniqueIdentifier>
+    </Filter>
+    <None Include="..\..\Source\MarchingIslands.Target.cs">
+      <Filter>Source</Filter>
+    </None>
+    <None Include="..\..\Source\MarchingIslandsEditor.Target.cs">
+      <Filter>Source</Filter>
+    </None>
+    <Filter Include="Config">
+      <UniqueIdentifier>{7E0C69D3-E4EA-4E64-8555-B26970C81FBE}</UniqueIdentifier>
+    </Filter>
+    <None Include="..\..\Config\DefaultEditor.ini">
+      <Filter>Config</Filter>
+    </None>
+    <None Include="..\..\Config\DefaultEngine.ini">
+      <Filter>Config</Filter>
+    </None>
+    <None Include="..\..\Config\DefaultGame.ini">
+      <Filter>Config</Filter>
+    </None>
+    <Filter Include="Source\MarchingIslands">
+      <UniqueIdentifier>{743C1ACE-5769-4908-9825-AD660F429BFF}</UniqueIdentifier>
+    </Filter>
+    <None Include="..\..\Source\MarchingIslands\MarchingIslands.Build.cs">
+      <Filter>Source\MarchingIslands</Filter>
+    </None>
+    <ClCompile Include="..\..\Source\MarchingIslands\MarchingIslands.cpp">
+      <Filter>Source\MarchingIslands</Filter>
+    </ClCompile>
+    <ClInclude Include="..\..\Source\MarchingIslands\MarchingIslands.h">
+      <Filter>Source\MarchingIslands</Filter>
+    </ClInclude>
+    <ClCompile Include="..\..\Source\MarchingIslands\MarchingIslandsGameModeBase.cpp">
+      <Filter>Source\MarchingIslands</Filter>
+    </ClCompile>
+    <ClInclude Include="..\..\Source\MarchingIslands\MarchingIslandsGameModeBase.h">
+      <Filter>Source\MarchingIslands</Filter>
+    </ClInclude>
+    <ClCompile Include="..\..\Source\MarchingIslands\MarchingTerrain.cpp">
+      <Filter>Source\MarchingIslands</Filter>
+    </ClCompile>
+    <ClInclude Include="..\..\Source\MarchingIslands\MarchingTerrain.h">
+      <Filter>Source\MarchingIslands</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\Source\MarchingIslands\SimplexNoise.h">
+      <Filter>Source\MarchingIslands</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\MarchingIslands\DualMarchingCubes.h">
+      <Filter>Source\MarchingIslands</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\Source\MarchingIslands\SimplexNoise.cpp">
+      <Filter>Source\MarchingIslands</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\MarchingIslands\DualMarchingCubes.cpp">
+      <Filter>Source\MarchingIslands</Filter>
+    </ClCompile>
+  </ItemGroup>
 </Project>

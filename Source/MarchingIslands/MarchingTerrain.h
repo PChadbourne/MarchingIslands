@@ -59,13 +59,13 @@ public:
 
 	//Interpolate between Vertexes with their values
 	UFUNCTION()
-	FVector VertexInterp(FVector P1, FVector P2);
+	FVector VertexInterp(FVector P1, FVector P2, float P1Val, float P2Val, float Value);
 
 public:
 
 	//Width of the grid
 	UPROPERTY()
-	int Width = 17;
+	int Width = 25;
 
 	//Runtime Mesh Component
 	UPROPERTY(VisibleAnywhere)

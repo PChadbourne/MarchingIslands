@@ -3,6 +3,7 @@
 #include "MarchingIslands.h"
 #include "MarchingTerrain.h"
 #include "RuntimeMeshComponent.h"
+#include "SimplexNoise.h"
 
 
 
@@ -21,9 +22,18 @@ AMarchingTerrain::AMarchingTerrain()
 	RMC = CreateDefaultSubobject<URuntimeMeshComponent>(TEXT("GeneratedMesh"));
 	RootComponent = RMC;
 	Grid.Empty();
-	Grid.Init(1.0f, Width*Width*Width*.5);
-	Grid.SetNumZeroed(Width*Width*Width);
+	Grid.Init(-1.0, Width*Width*Width);
+	SimplexNoise Noise;
 
+	float scale = .05;
+
+	for (int i = 1; i < Width - 1; i++) {
+		for (int j = 1; j < Width - 1; j++) {
+			for (int k = 1; k < Width - 1; k++) {
+				Grid[i + Width*j + Width*Width*k] = Noise.SimplexNoise3D(i*scale, j*scale, k*scale);
+			}
+		}
+	}
 
 }
 
@@ -353,40 +363,44 @@ void AMarchingTerrain::MarchingCubes(FGridcell Gridcell, float Isolevel)
 	if (edgeTable[CubeIndex] == 0) return;
 
 	if (edgeTable[CubeIndex] & 1)
-		VertList[0] = VertexInterp(Gridcell.p[0], Gridcell.p[1]);
+		VertList[0] = VertexInterp(Gridcell.p[0], Gridcell.p[1], Gridcell.val[0], Gridcell.val[1], 0);
 	if (edgeTable[CubeIndex] & 2)
-		VertList[1] = VertexInterp(Gridcell.p[1], Gridcell.p[2]);
+		VertList[1] = VertexInterp(Gridcell.p[1], Gridcell.p[2], Gridcell.val[1], Gridcell.val[2], 0);
 	if (edgeTable[CubeIndex] & 4)
-		VertList[2] = VertexInterp(Gridcell.p[2], Gridcell.p[3]);
+		VertList[2] = VertexInterp(Gridcell.p[2], Gridcell.p[3], Gridcell.val[2], Gridcell.val[3], 0);
 	if (edgeTable[CubeIndex] & 8)
-		VertList[3] = VertexInterp(Gridcell.p[3], Gridcell.p[0]);
+		VertList[3] = VertexInterp(Gridcell.p[3], Gridcell.p[0], Gridcell.val[3], Gridcell.val[0], 0);
 	if (edgeTable[CubeIndex] & 16)
-		VertList[4] = VertexInterp(Gridcell.p[4], Gridcell.p[5]);
+		VertList[4] = VertexInterp(Gridcell.p[4], Gridcell.p[5], Gridcell.val[4], Gridcell.val[5], 0);
 	if (edgeTable[CubeIndex] & 32)
-		VertList[5] = VertexInterp(Gridcell.p[5], Gridcell.p[6]);
+		VertList[5] = VertexInterp(Gridcell.p[5], Gridcell.p[6], Gridcell.val[5], Gridcell.val[6], 0);
 	if (edgeTable[CubeIndex] & 64)
-		VertList[6] = VertexInterp(Gridcell.p[6], Gridcell.p[7]);
+		VertList[6] = VertexInterp(Gridcell.p[6], Gridcell.p[7], Gridcell.val[6], Gridcell.val[7], 0);
 	if (edgeTable[CubeIndex] & 128)
-		VertList[7] = VertexInterp(Gridcell.p[7], Gridcell.p[4]);
+		VertList[7] = VertexInterp(Gridcell.p[7], Gridcell.p[4], Gridcell.val[7], Gridcell.val[4], 0);
 	if (edgeTable[CubeIndex] & 256)
-		VertList[8] = VertexInterp(Gridcell.p[0], Gridcell.p[4]);
+		VertList[8] = VertexInterp(Gridcell.p[0], Gridcell.p[4], Gridcell.val[0], Gridcell.val[4], 0);
 	if (edgeTable[CubeIndex] & 512)
-		VertList[9] = VertexInterp(Gridcell.p[1], Gridcell.p[5]);
+		VertList[9] = VertexInterp(Gridcell.p[1], Gridcell.p[5], Gridcell.val[1], Gridcell.val[5], 0);
 	if (edgeTable[CubeIndex] & 1024)
-		VertList[10] = VertexInterp(Gridcell.p[2], Gridcell.p[6]);
+		VertList[10] = VertexInterp(Gridcell.p[2], Gridcell.p[6], Gridcell.val[2], Gridcell.val[6], 0);
 	if (edgeTable[CubeIndex] & 2048)
-		VertList[11] = VertexInterp(Gridcell.p[3], Gridcell.p[7]);
+		VertList[11] = VertexInterp(Gridcell.p[3], Gridcell.p[7], Gridcell.val[3], Gridcell.val[7], 0);
 
 	
 	for (int i = 0; triTable[CubeIndex][i] != -1; i += 3) {
 		Vertices.Add(VertList[triTable[CubeIndex][i]]);
 		Triangles.Add(Triangles.Num());
 
+		UE_LOG(LogTemp, Warning, TEXT("%f %f %f"), VertList[triTable[CubeIndex][i]].X, VertList[triTable[CubeIndex][i]].Y, VertList[triTable[CubeIndex][i]].Z);
+
 		Vertices.Add(VertList[triTable[CubeIndex][i + 1]]);
 		Triangles.Add(Triangles.Num());
+		UE_LOG(LogTemp, Warning, TEXT("%f %f %f"), VertList[triTable[CubeIndex][i+1]].X, VertList[triTable[CubeIndex][i+1]].Y, VertList[triTable[CubeIndex][i+1]].Z);
 
 		Vertices.Add(VertList[triTable[CubeIndex][i + 2]]);
 		Triangles.Add(Triangles.Num());
+		UE_LOG(LogTemp, Warning, TEXT("%f %f %f"), VertList[triTable[CubeIndex][i+2]].X, VertList[triTable[CubeIndex][i+2]].Y, VertList[triTable[CubeIndex][i+2]].Z);
 
 	}
 }
@@ -468,7 +482,55 @@ void AMarchingTerrain::UpdateMesh(float Isolevel)
 	RMC->CreateMeshSection(0, Vertices, Triangles, Normals, TextureCoordinates, VertexColors, Tangents, true);
 }
 
-FVector AMarchingTerrain::VertexInterp(FVector P1, FVector P2)
+FVector AMarchingTerrain::VertexInterp(FVector P1, FVector P2, float P1Val, float P2Val, float Value)
 {
-	return P1 + (P2 - P1) / 2.0f;
+
+	
+	float mu;
+	FVector P;
+
+	if (FMath::Abs(Value - P1Val) < 0.00001)
+		return(P1);
+	if (FMath::Abs(Value - P2Val) < 0.00001)
+		return(P2);
+	if (FMath::Abs(P1Val - P2Val) < 0.00001)
+		return(P1);
+	mu = (Value - P1Val) / (P2Val - P1Val);
+	P.X = P1.X + mu * (P2.X - P1.X);
+	P.Y = P1.Y + mu * (P2.Y - P1.Y);
+	P.Z = P1.Z + mu * (P2.Z - P1.Z);
+
+	return(P);
+	
+
+	//return P1 + (P2 - P1) / 2.0f;
+
+	/*
+	if (P2.X < P1.X || (P2.Y < P1.Y && P2.X == P1.X) || (P2.Z < P1.Z && (P2.X == P1.X && P2.Y == P1.Y)))
+	{
+		FVector P;
+		if (FMath::Abs(P2Val - P1Val) > 0.00001 && Value - P2Val > 0.00001)
+		{
+			P = (P2 + (P1 - P2)) / ((P1Val - P2Val) * (Value - P2Val));
+		}
+		else
+		{
+			return P2;
+		}
+		return P;
+	}
+	else
+	{
+		FVector P;
+		if (FMath::Abs(P1Val - P2Val) > 0.00001 && Value - P1Val > 0.00001)
+		{
+			P = (P1 + (P2 - P1)) / ((P2Val - P1Val) * (Value - P1Val));
+		}
+		else
+		{
+			return P1;
+		}
+		return P;
+	}
+	*/
 }
