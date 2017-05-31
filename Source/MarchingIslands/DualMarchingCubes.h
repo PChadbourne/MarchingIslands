@@ -37,10 +37,7 @@ enum class VertexModes : uint8
 	QEF = 2,
 	QEM = 3
 };
-
-/**
- * 
- */
+/*
 class MARCHINGISLANDS_API DualMarchingCubes
 {
 public:
@@ -387,3 +384,5 @@ private:
 	};
 
 };
+
+*/

@@ -55,12 +55,18 @@
     <ClInclude Include="..\..\Source\MarchingIslands\DualMarchingCubes.h">
       <Filter>Source\MarchingIslands</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Source\MarchingIslands\Octree.h">
+      <Filter>Source\MarchingIslands</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Source\MarchingIslands\SimplexNoise.cpp">
       <Filter>Source\MarchingIslands</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\MarchingIslands\DualMarchingCubes.cpp">
+      <Filter>Source\MarchingIslands</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\MarchingIslands\Octree.cpp">
       <Filter>Source\MarchingIslands</Filter>
     </ClCompile>
   </ItemGroup>

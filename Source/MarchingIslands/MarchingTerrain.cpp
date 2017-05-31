@@ -389,19 +389,23 @@ void AMarchingTerrain::MarchingCubes(FGridcell Gridcell, float Isolevel)
 
 	
 	for (int i = 0; triTable[CubeIndex][i] != -1; i += 3) {
+
+		
 		Vertices.Add(VertList[triTable[CubeIndex][i]]);
 		Triangles.Add(Triangles.Num());
 
-		UE_LOG(LogTemp, Warning, TEXT("%f %f %f"), VertList[triTable[CubeIndex][i]].X, VertList[triTable[CubeIndex][i]].Y, VertList[triTable[CubeIndex][i]].Z);
-
 		Vertices.Add(VertList[triTable[CubeIndex][i + 1]]);
 		Triangles.Add(Triangles.Num());
-		UE_LOG(LogTemp, Warning, TEXT("%f %f %f"), VertList[triTable[CubeIndex][i+1]].X, VertList[triTable[CubeIndex][i+1]].Y, VertList[triTable[CubeIndex][i+1]].Z);
 
 		Vertices.Add(VertList[triTable[CubeIndex][i + 2]]);
 		Triangles.Add(Triangles.Num());
-		UE_LOG(LogTemp, Warning, TEXT("%f %f %f"), VertList[triTable[CubeIndex][i+2]].X, VertList[triTable[CubeIndex][i+2]].Y, VertList[triTable[CubeIndex][i+2]].Z);
+		
 
+		
+		//Triangles.Add(Vertices.AddUnique(VertList[triTable[CubeIndex][i]]));
+		//Triangles.Add(Vertices.AddUnique(VertList[triTable[CubeIndex][i + 1]]));
+		//Triangles.Add(Vertices.AddUnique(VertList[triTable[CubeIndex][i + 2]]));
+		
 	}
 }
 
@@ -445,6 +449,8 @@ void AMarchingTerrain::UpdateMesh(float Isolevel)
 			}
 		}
 	}
+
+	UE_LOG(LogTemp, Warning, TEXT("%d"), Triangles.Num());
 
 	Normals.SetNum(Vertices.Num(), false);
 	TextureCoordinates.SetNum(Vertices.Num(), false);
