@@ -409,9 +409,11 @@
     <ClCompile Include="..\..\Source\MarchingIslands\DualMarchingCubes.cpp" />
     <ClCompile Include="..\..\Source\MarchingIslands\Octree.cpp" />
     <ClCompile Include="..\..\Source\MarchingIslands\SimplexNoise.cpp" />
+    <ClCompile Include="..\..\Source\MarchingIslands\WorldHandler.cpp" />
     <ClInclude Include="..\..\Source\MarchingIslands\DualMarchingCubes.h" />
     <ClInclude Include="..\..\Source\MarchingIslands\Octree.h" />
     <ClInclude Include="..\..\Source\MarchingIslands\SimplexNoise.h" />
+    <ClInclude Include="..\..\Source\MarchingIslands\WorldHandler.h" />
     <None Include="..\..\MarchingIslands.uproject" />
     <None Include="..\..\Source\MarchingIslands.Target.cs" />
     <None Include="..\..\Source\MarchingIslandsEditor.Target.cs" />
