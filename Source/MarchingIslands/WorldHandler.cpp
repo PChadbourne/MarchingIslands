@@ -6,11 +6,10 @@
 // Sets default values
 AWorldHandler::AWorldHandler()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
 
 	float t = (1.0 + FMath::Sqrt(5)) / 2.0;
 
+	//Locations of the vertices of the Icosahedron
 	IcoVerts.Add(FVector(-1, t, 0));
 	IcoVerts.Add(FVector(1, t, 0));
 	IcoVerts.Add(FVector(-1, -t, 0));
@@ -26,32 +25,42 @@ AWorldHandler::AWorldHandler()
 	IcoVerts.Add(FVector(-t, 0, -1));
 	IcoVerts.Add(FVector(-t, 0, 1));
 
-	IcoTris.Add(FVector(0, 11, 5));
-	IcoTris.Add(FVector(0, 5, 1));
-	IcoTris.Add(FVector(0, 1, 7));
-	IcoTris.Add(FVector(0, 7, 10));
-	IcoTris.Add(FVector(0, 10, 11));
 
-	IcoTris.Add(FVector(1, 5, 9));
+	//Vectors holding the indices of the triangle vertices
+	//Each vector represents one of the 20 faces of the Icosahedron
+	IcoTris.Add(FVector(0, 11, 5));
 	IcoTris.Add(FVector(5, 11, 4));
-	IcoTris.Add(FVector(11, 10, 2));
-	IcoTris.Add(FVector(10, 7, 6));
+
+	IcoTris.Add(FVector(0, 5, 1));
+	IcoTris.Add(FVector(1, 5, 9));
+
+	IcoTris.Add(FVector(0, 1, 7));
 	IcoTris.Add(FVector(7, 1, 8));
 
-	IcoTris.Add(FVector(3, 9, 4));
-	IcoTris.Add(FVector(3, 4, 2));
-	IcoTris.Add(FVector(3, 2, 6));
-	IcoTris.Add(FVector(3, 6, 8));
-	IcoTris.Add(FVector(3, 8, 9));
+	IcoTris.Add(FVector(0, 7, 10));
+	IcoTris.Add(FVector(10, 7, 6));
+
+	IcoTris.Add(FVector(0, 10, 11));
+	IcoTris.Add(FVector(11, 10, 2));
 
 	IcoTris.Add(FVector(4, 9, 5));
-	IcoTris.Add(FVector(2, 4, 11));
-	IcoTris.Add(FVector(6, 2, 10));
-	IcoTris.Add(FVector(8, 6, 7));
-	IcoTris.Add(FVector(9, 8, 1));
+	IcoTris.Add(FVector(3, 9, 4));
 
+	IcoTris.Add(FVector(9, 8, 1));
+	IcoTris.Add(FVector(3, 8, 9));
+
+	IcoTris.Add(FVector(8, 6, 7));
+	IcoTris.Add(FVector(3, 6, 8));
+	
+	IcoTris.Add(FVector(6, 2, 10));
+	IcoTris.Add(FVector(3, 2, 6));
+	
+	IcoTris.Add(FVector(2, 4, 11));
+	IcoTris.Add(FVector(3, 4, 2));
+	
 	for (int i = 0; i < 20; i += 2)
 	{
+		//Pair two triangles so that their data can be stored in a square array.
 		IcoSections.Add(FIcoSection(IcoTris[i], IcoTris[i+1]));
 		IcoSections[i / 2].Heightmap = GenerateHeightmap(IcoSections[i / 2]);
 	}
