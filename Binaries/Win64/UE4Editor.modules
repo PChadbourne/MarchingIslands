@@ -4,6 +4,6 @@
 	"BuildId" : "1ddcddb2-7ec6-4aa9-8a33-fc32d2a526e5",
 	"Modules" : 
 	{
-		"MarchingIslands" : "UE4Editor-MarchingIslands-6613.dll"
+		"MarchingIslands" : "UE4Editor-MarchingIslands.dll"
 	}
 }

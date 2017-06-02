@@ -3,30 +3,25 @@
 #pragma once
 
 #include "GameFramework/Actor.h"
+#include "SimplexNoise.h"
 #include "WorldHandler.generated.h"
 
-
-UENUM(BlueprintType)		//"BlueprintType" is essential to include
-enum class ECardinalDirection : uint8
-{
-	CD_North 	UMETA(DisplayName = "North"),
-	CD_East 	UMETA(DisplayName = "East"),
-	CD_South	UMETA(DisplayName = "South"),
-	CD_West		UMETA(DisplayName = "West")
-};
-
-
-
 USTRUCT()
-struct FIcosphereSection
+struct FIcoSection
 {
 	GENERATED_BODY()
 
 public:
-	TArray<float> Height;
-	int GetNeighboringSection(int SectionIndex, ECardinalDirection Direction);
-};
+	FIcoSection();
 
+	FIcoSection(FVector A, FVector B);
+
+	UPROPERTY()
+	TArray<float> Heightmap;
+
+	FVector IndexA;
+	FVector IndexB;
+};
 
 UCLASS()
 class MARCHINGISLANDS_API AWorldHandler : public AActor
@@ -45,8 +40,28 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	//Array of icosphere's sections. Each section is a rectangular representation of two triangles.
+	//
 	UPROPERTY()
-	TArray<FIcosphereSection> Sections;
+	TArray<FVector> IcoVerts;
+
+	//
+	UPROPERTY()
+	TArray<FVector> IcoTris;
+
+	//
+	UPROPERTY()
+	TArray<FIcoSection> IcoSections;
+
+	static const int Resolution = 10;
+
+	static SimplexNoise Noise;
 	
+	//
+	UFUNCTION()
+	TArray<int> GetNeighboringSections(int CurrentTri);
+
+	//
+	UFUNCTION()
+	TArray<float> GenerateHeightmap(FIcoSection Section);
+
 };
