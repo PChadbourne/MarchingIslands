@@ -118,17 +118,18 @@ TArray<int> AWorldHandler::GetNeighboringSections(int CurrentTri)
 TArray<float> AWorldHandler::GenerateHeightmap(FIcoSection Section)
 {
 	TArray<float> ReturnArray;
-	ReturnArray.Init(0.0f, Resolution*Resolution);
+	//One side of the array has to be larger so that the two triangles don't share the diagonal
+	ReturnArray.Init(0.0f, Resolution*(Resolution+1));
 	for (int i = 0; i < Resolution; i++)
 	{
-		for (int j = 0; j < Resolution; j++)
+		for (int j = 0; j < Resolution + 1; j++)
 		{
 			if (i + j < Resolution) {
 				FVector A = FMath::Lerp(IcoVerts[Section.IndexA.X], IcoVerts[Section.IndexA.Y], (float)i / (float)Resolution);
 				FVector B = FMath::Lerp(IcoVerts[Section.IndexA.X], IcoVerts[Section.IndexA.Z], (float)j / (float)Resolution);
 				FVector C = A + B;
 				ReturnArray[i + Resolution * j] = Noise.SimplexNoise3D(C.X, C.Y, C.Z);
-			} //Everything in here is probably wrong, will need to entirely re-do math to get proper values
+			} //Everything in here is wrong, will need to entirely re-do math to get proper values
 			else {
 				FVector A = FMath::Lerp(IcoVerts[Section.IndexB.X], IcoVerts[Section.IndexB.Y], (float)i / (float)Resolution);
 				FVector B = FMath::Lerp(IcoVerts[Section.IndexB.X], IcoVerts[Section.IndexB.Z], (float)j / (float)Resolution);
