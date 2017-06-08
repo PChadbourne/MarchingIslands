@@ -133,14 +133,16 @@ TArray<float> AWorldHandler::GenerateHeightmap(FIcoSection Section)
 		for (int j = 0; j < Resolution + 1; j++)
 		{
 			if (i + j < Resolution) {
-				FVector A = FMath::Lerp(IcoVerts[Section.IndexA.X], IcoVerts[Section.IndexA.Y], (float)i / (float)Resolution);
-				FVector B = FMath::Lerp(A, IcoVerts[Section.IndexA.Z], (float)j / (float)Resolution);
-				ReturnArray[i + Resolution * j] = Noise.SimplexNoise3D(B.X, B.Y, B.Z);
+				FVector alpha = FMath::Lerp(IcoVerts[Section.IndexA.X], IcoVerts[Section.IndexA.Y], (i*2.0f) / (float)Resolution);
+				FVector beta = FMath::Lerp(IcoVerts[Section.IndexA.X], IcoVerts[Section.IndexA.Z], (j*2.0f) / (float)Resolution);
+				FVector total = FMath::Lerp(alpha, beta, 0.5f);
+				ReturnArray[i + Resolution * j] = Noise.SimplexNoise3D(total.X, total.Y, total.Z);
 			}
 			else {
-				FVector A = FMath::Lerp(IcoVerts[Section.IndexB.X], IcoVerts[Section.IndexB.Y], (float)i / (float)Resolution);
-				FVector B = FMath::Lerp(A, IcoVerts[Section.IndexB.Z], (float)j / (float)Resolution);
-				ReturnArray[i + Resolution * j] = Noise.SimplexNoise3D(B.X, B.Y, B.Z);
+				FVector alpha = FMath::Lerp(IcoVerts[Section.IndexB.Z], IcoVerts[Section.IndexB.Y], (-i) / (float)Resolution + 1);
+				FVector beta = FMath::Lerp(IcoVerts[Section.IndexB.Z], IcoVerts[Section.IndexB.X], (-j) / (float)Resolution + 1);
+				FVector total = (FMath::Lerp(alpha, beta, 0.5f));
+				ReturnArray[i + Resolution * j] = Noise.SimplexNoise3D(total.X, total.Y, total.Z);
 			}
 		}
 	}
