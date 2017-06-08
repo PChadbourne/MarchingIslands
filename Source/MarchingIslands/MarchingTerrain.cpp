@@ -450,7 +450,7 @@ void AMarchingTerrain::UpdateMesh(float Isolevel)
 		}
 	}
 
-	UE_LOG(LogTemp, Warning, TEXT("%d"), Triangles.Num());
+	//UE_LOG(LogTemp, Warning, TEXT("%d"), Triangles.Num());
 
 	Normals.SetNum(Vertices.Num(), false);
 	TextureCoordinates.SetNum(Vertices.Num(), false);

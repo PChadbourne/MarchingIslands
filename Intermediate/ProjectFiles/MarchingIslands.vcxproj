@@ -407,10 +407,12 @@
   </PropertyGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Source\MarchingIslands\DualMarchingCubes.cpp" />
+    <ClCompile Include="..\..\Source\MarchingIslands\MarchingCubes.cpp" />
     <ClCompile Include="..\..\Source\MarchingIslands\Octree.cpp" />
     <ClCompile Include="..\..\Source\MarchingIslands\SimplexNoise.cpp" />
     <ClCompile Include="..\..\Source\MarchingIslands\WorldHandler.cpp" />
     <ClInclude Include="..\..\Source\MarchingIslands\DualMarchingCubes.h" />
+    <ClInclude Include="..\..\Source\MarchingIslands\MarchingCubes.h" />
     <ClInclude Include="..\..\Source\MarchingIslands\Octree.h" />
     <ClInclude Include="..\..\Source\MarchingIslands\SimplexNoise.h" />
     <ClInclude Include="..\..\Source\MarchingIslands\WorldHandler.h" />

@@ -4,6 +4,7 @@
 
 #include "GameFramework/Actor.h"
 #include "SimplexNoise.h"
+#include "MarchingCubes.h"
 #include "WorldHandler.generated.h"
 
 USTRUCT()
@@ -32,6 +33,9 @@ public:
 	// Sets default values for this actor's properties
 	AWorldHandler();
 
+	UPROPERTY(VisibleAnywhere)
+	class URuntimeMeshComponent * RMC;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -39,6 +43,9 @@ protected:
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+
+	//
+	TArray<FMeshData> MeshData;
 
 	//
 	UPROPERTY()
@@ -52,7 +59,7 @@ public:
 	UPROPERTY()
 	TArray<FIcoSection> IcoSections;
 
-	static const int Resolution = 10;
+	static const int Resolution = 16;
 
 	static SimplexNoise Noise;
 	
@@ -64,4 +71,10 @@ public:
 	UFUNCTION()
 	TArray<float> GenerateHeightmap(FIcoSection Section);
 
+	//
+	UFUNCTION()
+	TArray<float> HeightmapToVolume(TArray<float> Heightmap);
+
+	UFUNCTION(BlueprintCallable)
+	void GenerateMesh();
 };

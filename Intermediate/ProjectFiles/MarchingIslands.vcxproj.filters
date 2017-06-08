@@ -61,6 +61,9 @@
     <ClInclude Include="..\..\Source\MarchingIslands\WorldHandler.h">
       <Filter>Source\MarchingIslands</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Source\MarchingIslands\MarchingCubes.h">
+      <Filter>Source\MarchingIslands</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Source\MarchingIslands\SimplexNoise.cpp">
@@ -73,6 +76,9 @@
       <Filter>Source\MarchingIslands</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\MarchingIslands\WorldHandler.cpp">
+      <Filter>Source\MarchingIslands</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\MarchingIslands\MarchingCubes.cpp">
       <Filter>Source\MarchingIslands</Filter>
     </ClCompile>
   </ItemGroup>
