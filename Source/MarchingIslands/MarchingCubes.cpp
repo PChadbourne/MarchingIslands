@@ -70,7 +70,7 @@ void MarchingCubes::Polyganize(FCell Cell, FMeshData* Data)
 
 void MarchingCubes::ProcessGrid(TArray<float> Grid, int Width, FMeshData* Data, FVector A, FVector B, FVector C, FVector D) //Needs to reposition p values off of icosahedron
 {
-	int Width2 = Width * Width;
+	int Width2 = Width * (Width+1);
 	FCell Cell;
 
 
@@ -154,12 +154,11 @@ FVector MarchingCubes::CalculateTriangularInterpolation(int i, int j, int k, FVe
 	if (i + j < Width) {
 		FVector alpha = FMath::Lerp(A, B, (i*2.0f) / (float)Width);
 		FVector beta = FMath::Lerp(A, C, (j*2.0f) / (float)Width);
-		return FMath::Lerp(alpha, beta, 0.5f) * 10 *(k / (float) Width);
+		return FMath::Lerp(alpha, beta, 0.5f) * (1 + k / ((float)Width*Width));
 	}
 	else {
-		FVector alpha = FMath::Lerp(D, C, (-i) / (float)Width+1);
-		FVector beta = FMath::Lerp(D, B, (-j) / (float)Width+1);
-		return (FMath::Lerp(alpha, beta, 0.5f)) * 10 * (k / (float) Width);
-		//return FVector(0, 0, 0);
+		FVector alpha = FMath::Lerp(D, C, ((i+1)*-2.0f + Width * 2) / (float)Width);
+		FVector beta = FMath::Lerp(D, B, ((j)*-2.0f + Width * 2) / (float)Width);
+		return FMath::Lerp(alpha, beta, 0.5f) * (1 + k / ((float)Width*Width));
 	}
 }

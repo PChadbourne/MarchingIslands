@@ -11,8 +11,10 @@ AWorldHandler::AWorldHandler()
 	RMC = CreateDefaultSubobject<URuntimeMeshComponent>(TEXT("RuntimeMesh"));
 	RootComponent = RMC;
 
-	float t = (1.0 + FMath::Sqrt(5)) / 2.0;
+	float scale = 100;
 
+	float t = (1.0 + FMath::Sqrt(5)) / 2.0;
+	
 	//Locations of the vertices of the Icosahedron
 	IcoVerts.Add(FVector(-100, t * 100, 0));
 	IcoVerts.Add(FVector(100, t * 100, 0));
@@ -28,7 +30,6 @@ AWorldHandler::AWorldHandler()
 	IcoVerts.Add(FVector(t * 100, 0, 100));
 	IcoVerts.Add(FVector(-t * 100, 0, -100));
 	IcoVerts.Add(FVector(-t * 100, 0, 100));
-
 
 	//Vectors holding the indices of the triangle vertices
 	//Each vector represents one of the 20 faces of the Icosahedron
@@ -46,7 +47,9 @@ AWorldHandler::AWorldHandler()
 
 	IcoTris.Add(FVector(0, 10, 11));
 	IcoTris.Add(FVector(11, 10, 2));
+	
 
+	
 	IcoTris.Add(FVector(3, 9, 4));
 	IcoTris.Add(FVector(4, 9, 5));
 
@@ -55,13 +58,13 @@ AWorldHandler::AWorldHandler()
 
 	IcoTris.Add(FVector(3, 6, 8));
 	IcoTris.Add(FVector(8, 6, 7));
-	
+
 	IcoTris.Add(FVector(3, 2, 6));
 	IcoTris.Add(FVector(6, 2, 10));
-	
+
 	IcoTris.Add(FVector(3, 4, 2));
 	IcoTris.Add(FVector(2, 4, 11));
-	
+
 	for (int i = 0; i < 20; i += 2)
 	{
 		//Pair two triangles so that their data can be stored in a square array.
@@ -125,9 +128,8 @@ TArray<float> AWorldHandler::GenerateHeightmap(FIcoSection Section)
 {
 	TArray<float> ReturnArray;
 	//One side of the array has to be larger so that the two triangles don't share the diagonal
-	ReturnArray.Init(0.0f, Resolution*(Resolution + 1)/2);
 	ReturnArray.Init(0.0f, Resolution*(Resolution + 1));
-	return ReturnArray;
+
 	for (int i = 0; i < Resolution; i++)
 	{
 		for (int j = 0; j < Resolution + 1; j++)
@@ -136,13 +138,13 @@ TArray<float> AWorldHandler::GenerateHeightmap(FIcoSection Section)
 				FVector alpha = FMath::Lerp(IcoVerts[Section.IndexA.X], IcoVerts[Section.IndexA.Y], (i*2.0f) / (float)Resolution);
 				FVector beta = FMath::Lerp(IcoVerts[Section.IndexA.X], IcoVerts[Section.IndexA.Z], (j*2.0f) / (float)Resolution);
 				FVector total = FMath::Lerp(alpha, beta, 0.5f);
-				ReturnArray[i + Resolution * j] = Noise.SimplexNoise3D(total.X, total.Y, total.Z);
+				ReturnArray[i + Resolution * j] = Noise.SimplexNoise3D(total.X * 0.01, total.Y * 0.01, total.Z * 0.01);
 			}
 			else {
-				FVector alpha = FMath::Lerp(IcoVerts[Section.IndexB.Z], IcoVerts[Section.IndexB.Y], (-i) / (float)Resolution + 1);
-				FVector beta = FMath::Lerp(IcoVerts[Section.IndexB.Z], IcoVerts[Section.IndexB.X], (-j) / (float)Resolution + 1);
+				FVector alpha = FMath::Lerp(IcoVerts[Section.IndexB.Z], IcoVerts[Section.IndexB.X], ((i+1)*-2.0f + Resolution * 2) / (float)Resolution);
+				FVector beta = FMath::Lerp(IcoVerts[Section.IndexB.Z], IcoVerts[Section.IndexB.Y], (j*-2.0f + Resolution * 2) / (float)Resolution);
 				FVector total = (FMath::Lerp(alpha, beta, 0.5f));
-				ReturnArray[i + Resolution * j] = Noise.SimplexNoise3D(total.X, total.Y, total.Z);
+				ReturnArray[i + Resolution * j] = Noise.SimplexNoise3D(total.X * 0.01, total.Y * 0.01, total.Z * 0.01);
 			}
 		}
 	}
@@ -152,20 +154,28 @@ TArray<float> AWorldHandler::GenerateHeightmap(FIcoSection Section)
 TArray<float> AWorldHandler::HeightmapToVolume(TArray<float> Heightmap)
 {
 	TArray<float> ReturnArray;
-	ReturnArray.Init(0.0f, Resolution*(Resolution+1)*(Resolution));
+	ReturnArray.Init(0.0f, Resolution*(Resolution + 1)*((Resolution)));
+	int Resolution2 = Resolution*(Resolution+1);
 
 	for (int i = 0; i < Resolution; i++) {
-		for (int j = 0; j < Resolution; j++) {
+		for (int j = 0; j < Resolution + 1; j++) {
 			for (int k = 0; k < Resolution; k++) {
-				//ReturnArray[i + j*Resolution + k*Resolution*Resolution] = Noise.SimplexNoise3D(i*.05,j*.05,k*.05);
-				//ReturnArray[i + j*Resolution + k*Resolution*Resolution] = Heightmap[i + j*Resolution];
-
-				if (k > Resolution / 2) {
-					ReturnArray[i + j*Resolution + k*Resolution*Resolution] = -1.0f;
+				if (k == 0) {
+					ReturnArray[i + j * (Resolution) + k * Resolution2] = 1;
+					continue;
 				}
-				else
-				{
-					ReturnArray[i + j*Resolution + k*Resolution*Resolution] = 1.0f;
+				else if (k == Resolution - 1) {
+					ReturnArray[i + j * (Resolution) + k * Resolution2] = -1;
+					continue;
+				}
+				if ((Heightmap[i + (Resolution)*j] + 1)/2.0f - (k / (float)Resolution) >= 1) {
+					ReturnArray[i + j * (Resolution) + k * Resolution2] = 1;
+				}
+				else if ((Heightmap[i + (Resolution)*j] + 1) / 2.0f - (k / (float)Resolution) <= 0) {
+					ReturnArray[i + j * (Resolution) + k * Resolution2] = -1;
+				}
+				else {
+					ReturnArray[i + j * (Resolution) + k * Resolution2] = Heightmap[i + Resolution*j];
 				}
 			}
 		}
